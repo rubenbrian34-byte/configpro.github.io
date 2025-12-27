@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ConfigPro Network ⚡</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #0d1117;
+      color: #c9d1d9;
+      display: flex;
+      min-height: 100vh;
+    }
+    .sidebar {
+      width: 300px;
+      background: #161b22;
+      padding: 40px 20px;
+      position: fixed;
+      height: 100%;
+      border-right: 1px solid #30363d;
+      text-align: center;
+    }
+    .sidebar h1 {
+      color: #58a6ff;
+      font-size: 2em;
+      margin-bottom: 10px;
+    }
+    .sidebar p {
+      margin: 20px 0;
+      font-size: 1.1em;
+    }
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 18px;
+      margin-top: 20px;
+      font-size: 1.4em;
+      font-weight: bold;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .btn-pedir {
+      background: #238636;
+      color: white;
+    }
+    .btn-pedir:hover {
+      background: #2ea043;
+      transform: scale(1.03);
+    }
+    .btn-staff {
+      background: #da3633;
+      color: white;
+    }
+    .btn-staff:hover {
+      background: #f85149;
+      transform: scale(1.03);
+    }
+    .main {
+      margin-left: 300px;
+      padding: 40px;
+      width: calc(100% - 300px);
+    }
+    .section {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 12px;
+      padding: 30px;
+      margin-bottom: 30px;
+    }
+    h2 {
+      color: #58a6ff;
+      margin-bottom: 20px;
+      font-size: 1.8em;
+    }
+    ul {
+      padding-left: 25px;
+      line-height: 1.8;
+    }
+    .status {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-top: 20px;
+    }
+    .slot {
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+    .available { background: #238636; }
+    .occupied { background: #da3633; }
+    #formulario, #staff-login, #staff-panel {
+      display: none;
+    }
+    label {
+      display: block;
+      margin-top: 20px;
+      font-weight: bold;
+      color: #58a6ff;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 14px;
+      margin-top: 8px;
+      background: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      color: #c9d1d9;
+    }
+    textarea { height: 140px; resize: vertical; }
+    .submit-btn, .toggle-btn {
+      margin-top: 20px;
+      padding: 15px;
+      width: 100%;
+      background: #da3633;
+      color: white;
+      font-size: 1.2em;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .submit-btn:hover, .toggle-btn:hover { background: #f85149; }
+    .toggle-btn { background: #58a6ff; margin-top: 10px; }
+    .message { color: #da3633; font-weight: bold; margin: 20px 0; text-align: center; }
+    footer {
+      text-align: center;
+      margin-top: 60px;
+      color: #8b949e;
+      font-size: 0.9em;
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h1>⚡ CONFIGPRO NETWORK ⚡</h1>
+    <p>Configuraciones profesionales gratuitas para Discord y Minecraft</p>
+    <button class="btn btn-pedir" onclick="mostrarFormulario()">PEDIR SERVICIO</button>
+    <button class="btn btn-staff" onclick="mostrarStaffLogin()">STAFF</button>
+  </div>
+
+  <!-- Contenido principal -->
+  <div class="main">
+    <div class="section">
+      <h2>📌 ¿QUÉ ES CONFIGPRO NETWORK?</h2>
+      <p>Es una red de servicios gratuitos y profesionales creada con el objetivo de:</p>
+      <ul>
+        <li>Ayudar a dueños de servidores que buscan calidad</li>
+        <li>Construir experiencia real en configuraciones</li>
+        <li>Formar un portafolio sólido</li>
+        <li>Crear una comunidad de desarrolladores y clientes</li>
+      </ul>
+      <p>Este proyecto nace para ofrecer configuraciones serias, ordenadas y eficientes, <strong>sin costo inicial</strong>.</p>
+    </div>
+
+    <div class="section">
+      <h2>🛠️ SERVICIOS QUE OFRECEMOS</h2>
+      <ul>
+        <li>Configuración completa de plugins</li>
+        <li>Creación de menús (DeluxeMenus / CommandPanels)</li>
+        <li>Kits (PlayerKits2)</li>
+        <li>Scoreboards, Tags y TAB</li>
+        <li>NPCs avanzados</li>
+        <li>Crates, rangos, optimización, permisos</li>
+        <li>Montaje de networks y proxys</li>
+        <li>Corrección de errores y ajustes</li>
+        <li>Soporte técnico general</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>📊 SISTEMA DE TRABAJOS DISPONIBLES</h2>
+      <p>Para mantener calidad y evitar saturación, solo aceptamos:</p>
+      <p style="font-size:1.3em; font-weight:bold; color:#58a6ff;">🔥 3 TRABAJOS ACTIVOS A LA VEZ</p>
+      <div class="status" id="statusSlots"></div>
+    </div>
+
+    <!-- Formulario Pedir Servicio (solo visible al pulsar PEDIR SERVICIO) -->
+    <div class="section" id="formulario">
+      <h2>Completa tu pedido</h2>
+      <p id="mensajeOcupado" class="message" style="display:none;">¡Todos los slots están ocupados! Vuelve más tarde.</p>
+      <p id="mensajeVacaciones" class="message" style="display:none;"></p>
+
+      <label for="servicio">Tipo de Servicio</label>
+      <select id="servicio" required>
+        <option value="">Selecciona un servicio</option>
+        <option value="Bot Discord con Embeds">Bot Discord con Embeds (como Roleplay)</option>
+        <option value="Configuración Completa Discord">Configuración Completa Discord</option>
+        <option value="Configuración Minecraft Plugins">Configuración Minecraft Plugins</option>
+        <option value="Menús DeluxeMenus/CommandPanels">Menús DeluxeMenus/CommandPanels</option>
+        <option value="Kits, Crates, Rangos">Kits, Crates, Rangos</option>
+        <option value="Scoreboard / TAB / Tags">Scoreboard / TAB / Tags</option>
+        <option value="Optimización y Permisos">Optimización y Permisos</option>
+        <option value="Otro">Otro (detalla abajo)</option>
+      </select>
+
+      <label for="presupuesto">Presupuesto (opcional)</label>
+      <input type="text" id="presupuesto" placeholder="Ej: Gratis / Sin Presupuesto / Nada">
+
+      <label for="nick">Tu Nick</label>
+      <input type="text" id="nick" required placeholder="Ej: zUnknown">
+
+      <label for="server">Nombre del Server</label>
+      <input type="text" id="server" required placeholder="Ej: ConfigPro Net">
+
+      <label for="id">ID del Server Discord (si aplica)</label>
+      <input type="text" id="id" placeholder="Ej: 1445253949874639031">
+
+      <label for="descripcion">Descripción del pedido</label>
+      <textarea id="descripcion" required placeholder="Detalla todo: tema, funciones, colores, plugins, etc."></textarea>
+
+      <button class="submit-btn" onclick="enviarPedido()">ENVIAR PEDIDO Y GENERAR FACTURA</button>
+    </div>
+
+    <!-- Login Staff (solo visible al pulsar STAFF) -->
+    <div class="section" id="staff-login">
+      <h2>Login Staff</h2>
+      <label for="staffEmail">Email</label>
+      <input type="email" id="staffEmail" placeholder="Ej: staffcorre@gmail.com">
+      <button class="submit-btn" onclick="loginStaff()">Iniciar Sesión</button>
+    </div>
+
+    <!-- Panel Staff -->
+    <div class="section" id="staff-panel">
+      <h2>Panel de Control Staff</h2>
+      <div class="status" id="staffSlots"></div>
+
+      <button class="toggle-btn" onclick="liberarTrabajo(1)">Liberar Trabajo 1</button>
+      <button class="toggle-btn" onclick="liberarTrabajo(2)">Liberar Trabajo 2</button>
+      <button class="toggle-btn" onclick="liberarTrabajo(3)">Liberar Trabajo 3</button>
+
+      <label for="nuevoStaff">Añadir nuevo Staff (email)</label>
+      <input type="email" id="nuevoStaff" placeholder="nuevo@ejemplo.com">
+      <button class="toggle-btn" onclick="añadirStaff()">Añadir Staff</button>
+
+      <p>Modo Vacaciones: <button class="toggle-btn" onclick="toggleVacaciones()">Toggle</button> <span id="statusVacaciones"></span></p>
+      <p>Modo Pausa: <button class="toggle-btn" onclick="togglePausa()">Toggle</button> <span id="statusPausa"></span></p>
+
+      <label for="mensajeGlobal">Mensaje global (visible cuando hay vacaciones/pausa)</label>
+      <textarea id="mensajeGlobal"></textarea>
+      <button class="toggle-btn" onclick="guardarMensaje()">Guardar Mensaje</button>
+    </div>
+
+    <footer>
+      ConfigPro Network © 2025 • zUnkn<br>
+      Servicio gratuito con ❤️ para la comunidad
+    </footer>
+  </div>
+
+  <script>
+    // Datos persistentes
+    let slots = JSON.parse(localStorage.getItem('slots')) || [
+      {id:1, status:'disponible', server:''},
+      {id:2, status:'disponible', server:''},
+      {id:3, status:'disponible', server:''}
+    ];
+    let staffEmails = JSON.parse(localStorage.getItem('staffEmails')) || ['rubenbrian34@gmail.com', 'contactosoygodoy@gmail.com'];
+    let vacaciones = JSON.parse(localStorage.getItem('vacaciones')) || false;
+    let pausa = JSON.parse(localStorage.getItem('pausa')) || false;
+    let mensajeGlobal = localStorage.getItem('mensajeGlobal') || '';
+    let contadorPedidos = parseInt(localStorage.getItem('contadorPedidos') || '0');
+
+    function guardarDatos() {
+      localStorage.setItem('slots', JSON.stringify(slots));
+      localStorage.setItem('staffEmails', JSON.stringify(staffEmails));
+      localStorage.setItem('vacaciones', JSON.stringify(vacaciones));
+      localStorage.setItem('pausa', JSON.stringify(pausa));
+      localStorage.setItem('mensajeGlobal', mensajeGlobal);
+    }
+
+    function actualizarStatus() {
+      const div = document.getElementById('statusSlots');
+      div.innerHTML = '';
+      slots.forEach(slot => {
+        const el = document.createElement('div');
+        el.classList.add('slot', slot.status === 'disponible' ? 'available' : 'occupied');
+        el.textContent = `▣ Trabajo ${slot.id}: ${slot.status === 'disponible' ? 'Disponible' : 'Ocupado (' + slot.server + ')'}`;
+        div.appendChild(el);
+      });
+    }
+
+    function actualizarStatusStaff() {
+      const div = document.getElementById('staffSlots');
+      div.innerHTML = '';
+      slots.forEach(slot => {
+        const el = document.createElement('div');
+        el.classList.add('slot', slot.status === 'disponible' ? 'available' : 'occupied');
+        el.textContent = `▣ Trabajo ${slot.id}: ${slot.status === 'disponible' ? 'Disponible' : 'Ocupado (' + slot.server + ')'}`;
+        div.appendChild(el);
+      });
+    }
+
+    function mostrarFormulario() {
+      document.getElementById('formulario').style.display = 'block';
+      document.getElementById('staff-login').style.display = 'none';
+      document.getElementById('staff-panel').style.display = 'none';
+
+      if (vacaciones || pausa) {
+        document.getElementById('mensajeVacaciones').style.display = 'block';
+        document.getElementById('mensajeVacaciones').textContent = mensajeGlobal || 'Estamos en pausa/vacaciones temporalmente.';
+        document.querySelector('#formulario .submit-btn').disabled = true;
+        return;
+      }
+
+      if (slots.every(s => s.status === 'ocupado')) {
+        document.getElementById('mensajeOcupado').style.display = 'block';
+        document.querySelector('#formulario .submit-btn').disabled = true;
+      } else {
+        document.getElementById('mensajeOcupado').style.display = 'none';
+        document.querySelector('#formulario .submit-btn').disabled = false;
+      }
+
+      window.scrollTo({ top: document.getElementById('formulario').offsetTop - 100, behavior: 'smooth' });
+    }
+
+    function mostrarStaffLogin() {
+      document.getElementById('staff-login').style.display = 'block';
+      document.getElementById('formulario').style.display = 'none';
+      document.getElementById('staff-panel').style.display = 'none';
+      window.scrollTo({ top: document.getElementById('staff-login').offsetTop - 100, behavior: 'smooth' });
+    }
+
+    function loginStaff() {
+      const email = document.getElementById('staffEmail').value.toLowerCase().trim();
+      if (staffEmails.includes(email)) {
+        document.getElementById('staff-login').style.display = 'none';
+        document.getElementById('staff-panel').style.display = 'block';
+        actualizarStatusStaff();
+        document.getElementById('statusVacaciones').textContent = vacaciones ? 'ACTIVO' : 'Inactivo';
+        document.getElementById('statusPausa').textContent = pausa ? 'ACTIVO' : 'Inactivo';
+        document.getElementById('mensajeGlobal').value = mensajeGlobal;
+      } else {
+        alert('Email no autorizado como Staff');
+      }
+    }
+
+    function liberarTrabajo(id) {
+      const slot = slots.find(s => s.id === id);
+      if (slot) {
+        slot.status = 'disponible';
+        slot.server = '';
+        guardarDatos();
+        actualizarStatusStaff();
+        actualizarStatus();
+      }
+    }
+
+    function añadirStaff() {
+      const email = document.getElementById('nuevoStaff').value.toLowerCase().trim();
+      if (email && !staffEmails.includes(email)) {
+        staffEmails.push(email);
+        guardarDatos();
+        alert('Nuevo staff añadido: ' + email);
+      }
+    }
+
+    function toggleVacaciones() {
+      vacaciones = !vacaciones;
+      guardarDatos();
+      document.getElementById('statusVacaciones').textContent = vacaciones ? 'ACTIVO' : 'Inactivo';
+    }
+
+    function togglePausa() {
+      pausa = !pausa;
+      guardarDatos();
+      document.getElementById('statusPausa').textContent = pausa ? 'ACTIVO' : 'Inactivo';
+    }
+
+    function guardarMensaje() {
+      mensajeGlobal = document.getElementById('mensajeGlobal').value;
+      guardarDatos();
+      alert('Mensaje global guardado');
+    }
+
+    function enviarPedido() {
+      if (vacaciones || pausa || slots.every(s => s.status === 'ocupado')) {
+        alert('No se pueden aceptar pedidos en este momento.');
+        return;
+      }
+
+      const servicio = document.getElementById('servicio').value || "Personalizado";
+      const presupuesto = document.getElementById('presupuesto').value || "Gratis ❤️";
+      const nick = document.getElementById('nick').value;
+      const server = document.getElementById('server').value;
+      const id = document.getElementById('id').value;
+      const desc = document.getElementById('descripcion').value;
+
+      if (!nick || !server || !desc) {
+        alert("Completa Nick, Server y Descripción");
+        return;
+      }
+
+      // Ocupar slot
+      const slotLibre = slots.find(s => s.status === 'disponible');
+      slotLibre.status = 'ocupado';
+      slotLibre.server = server;
+      guardarDatos();
+      actualizarStatus();
+
+      // Generar factura
+      contadorPedidos++;
+      localStorage.setItem('contadorPedidos', contadorPedidos);
+      const hoy = new Date();
+      const fecha = `${String(hoy.getDate()).padStart(2,'0')}/${String(hoy.getMonth()+1).padStart(2,'0')}/${hoy.getFullYear()}`;
+      const numeroFactura = String(contadorPedidos).padStart(3,'0') + `-PEDIDO-${hoy.getFullYear()}`;
+
+      const facturaHTML = `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Factura ${numeroFactura}</title><style>
+        body{font-family:Arial;background:#f0f0f0;padding:50px;text-align:center;}
+        .factura{max-width:800px;margin:auto;background:white;padding:50px;border-radius:20px;box-shadow:0 10px 30px rgba(0,0,0,0.2);}
+        h1{color:#da3633;font-size:2.5em;}
+        table{width:100%;margin:30px 0;}
+        td{padding:12px;text-align:left;border-bottom:1px solid #eee;}
+        .total{font-size:3em;color:#238636;margin:40px 0;}
+        .footer{margin-top:50px;font-style:italic;}
+      </style></head><body>
+      <div class="factura">
+        <h1>⚡ FACTURA CONFIGPRO NETWORK ⚡</h1>
+        <p><strong>Factura Nº:</strong> ${numeroFactura}<br><strong>Fecha:</strong> ${fecha}</p>
+        <table>
+          <tr><td><strong>Cliente:</strong></td><td>${nick}</td></tr>
+          <tr><td><strong>Server:</strong></td><td>${server}</td></tr>
+          ${id ? `<tr><td><strong>ID Discord:</strong></td><td>${id}</td></tr>` : ''}
+          <tr><td><strong>Servicio:</strong></td><td>${servicio}</td></tr>
+          <tr><td><strong>Descripción:</strong></td><td>${desc.replace(/\n/g,'<br>')}</td></tr>
+          <tr><td><strong>Presupuesto:</strong></td><td>${presupuesto}</td></tr>
+        </table>
+        <div class="total">TOTAL: 0.00 $ (GRATIS ❤️)</div>
+        <p class="footer">Gracias por elegir ConfigPro Network<br>Te contactaremos pronto • zUnkn ⚡</p>
+      </div>
+      </body></html>`;
+
+      const nueva = window.open('');
+      nueva.document.write(facturaHTML);
+      nueva.document.close();
+
+      alert(`¡Pedido enviado con éxito!\nFactura Nº: ${numeroFactura}\nRevisa la nueva pestaña`);
+      document.getElementById('formulario').style.display = 'none';
+    }
+
+    // Inicializar
+    actualizarStatus();
+  </script>
+</body>
+</html>
